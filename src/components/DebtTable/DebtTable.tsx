@@ -13,16 +13,6 @@ const DebtTable: React.FC<DebtTableProps> = ({
   sortConfig,
   handleSort,
 }) => {
-  // const renderSortIcon = (key: keyof Debt) => {
-  //   if (sortConfig.key === key) {
-  //     return sortConfig.direction === "asc" ? (
-  //       <span className="sort-icon sort-asc" />
-  //     ) : (
-  //       <span className="sort-icon sort-desc" />
-  //     );
-  //   }
-  //   return null;
-  // };
   const renderSortIcon = (key: keyof Debt) => {
     let additionalClass = "";
     if (sortConfig.key === key) {

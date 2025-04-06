@@ -1,29 +1,30 @@
-@use "./../../assets/scss/variables.scss" as *;
+@use './../../assets/scss/variables.scss' as *;
+@use './../../assets/scss/mixin.scss' as *;
 .debt-market__search {
   display: flex;
   justify-content: start;
   align-items: center;
   width: 100%;
-  @media (max-width: 992px) {
-    gap: 10px;
+  @include max-tablet {
+    gap: 0.625rem;
     flex-direction: column;
     justify-content: center;
     align-items: start;
   }
   &-label {
     color: $text-color;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: -0.25px;
   }
   &-input {
-    padding: 10px;
-    font-size: 16px;
-    height: 45px;
+    padding: 0.625rem;
+    font-size: 1rem;
+    height: 2.8125rem;
     width: 100%;
-    max-width: 360px;
+    max-width: 22.5rem;
     border: 1px solid $grey;
     background-color: $white;
     color: black;
@@ -37,12 +38,12 @@
     background-color: $secondary-color;
     color: $text-color;
     border: none;
-    padding-inline: 45px;
-    height: 45px;
+    padding-inline: 2.8125rem;
+    height: 2.8125rem;
     display: block;
     cursor: pointer;
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 0.75rem;
     transition: background-color 0.3s;
     &:hover {
       background-color: $secondary-color-dark;
@@ -51,9 +52,9 @@
       outline: none;
       border: 1px solid $error-border;
     }
-    @media (max-width: 992px) {
+    @include max-tablet {
       width: 100%;
-      max-width: 360px;
+      max-width: 22.5rem;
     }
   }
 }
