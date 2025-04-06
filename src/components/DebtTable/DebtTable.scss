@@ -1,0 +1,58 @@
+@use "./../../assets/scss/variables.scss" as *;
+
+.debt-market {
+  &__table {
+    width: 100%;
+    max-width: 1320px;
+    border-collapse: collapse;
+    &-container {
+      position: relative;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      overflow: hidden;
+      width: 100%;
+    }
+    &-wrapper {
+      width: 100%;
+      overflow: auto;
+    }
+    &-header {
+      max-width: 300px;
+      cursor: pointer;
+      color: $grey;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: start;
+      user-select: none;
+      padding: 12px 10px;
+      text-transform: uppercase;
+    }
+    &-row {
+      border-bottom: 1px solid $grey;
+    }
+    &-cell {
+      color: $primary-color;
+      font-weight: 600;
+      padding: 15px 10px;
+      text-align: left;
+      word-wrap: break-word;
+    }
+  }
+}
+
+.sort-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.sort-asc {
+  border-bottom: 6px solid $grey;
+}
+
+.sort-desc {
+  border-top: 6px solid $grey;
+}
