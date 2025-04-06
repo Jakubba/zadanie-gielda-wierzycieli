@@ -6,7 +6,7 @@
 
 ## Strona live
 
-Zobacz działającą wersję aplikacji na żywo: [Giełda Wierzytelności](https://github.com/Jakubba/zadanie-gielda-wierzycieli.pl) 🌐
+Zobacz działającą wersję aplikacji na żywo: [Giełda Wierzytelności](https://zadanie-gielda-wierzycieli-ksyw.vercel.app/) 🌐
 
 ---
 
