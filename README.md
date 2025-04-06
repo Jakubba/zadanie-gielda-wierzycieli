@@ -1,7 +1,3 @@
-Pewnie! Oto poprawiona i lekko uporządkowana wersja Twojego pliku `README.md` z poprawkami językowymi, formatowaniem i większą spójnością:
-
----
-
 # Giełda Wierzytelności 📊
 
 ## Opis projektu 📝
