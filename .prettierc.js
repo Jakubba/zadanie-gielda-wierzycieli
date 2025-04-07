@@ -1,10 +1,10 @@
 module.exports = {
-  semi: true, // dodaje średniki
-  singleQuote: true, // pojedyncze cudzysłowy
-  tabWidth: 2, // 2 spacje
-  useTabs: false, // bez tabów
-  trailingComma: "es5", // przecinki na końcu
-  bracketSpacing: true, // spacje między klamrami
-  arrowParens: "always", // (x) => zamiast x =>
-  printWidth: 100, // max długość linii
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  useTabs: false,
+  trailingComma: "es5",
+  bracketSpacing: true,
+  arrowParens: "always",
+  printWidth: 100,
 };

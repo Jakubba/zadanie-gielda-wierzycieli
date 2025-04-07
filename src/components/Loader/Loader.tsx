@@ -1,10 +1,10 @@
-import React from 'react';
-import './Loader.scss';
+import React from "react";
+import "./Loader.scss";
 
 const Loader: React.FC = () => {
   return (
-    <div className='loader'>
-      <div className='loader__spinner'></div> Ładowanie...
+    <div className="loader">
+      <div className="loader__spinner"></div> Ładowanie...
     </div>
   );
 };

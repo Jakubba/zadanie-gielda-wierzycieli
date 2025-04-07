@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Debt } from "../components/DebtMarket/DebtMarket.types";
+import { Debt } from "../types/debt.types";
 
 const useDebts = () => {
   const [debts, setDebts] = useState<Debt[]>([]);

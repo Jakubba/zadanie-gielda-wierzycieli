@@ -1,4 +1,4 @@
-@use './../../assets/scss/variables.scss' as *;
+@use "./../../assets/scss/variables.scss" as *;
 .debt-market {
   &__table {
     width: 100%;
@@ -36,6 +36,10 @@
       padding: 0.9375rem 0.625rem;
       text-align: left;
       word-wrap: break-word;
+      &:empty::before {
+        content: "-";
+        color: $grey;
+      }
     }
   }
 }

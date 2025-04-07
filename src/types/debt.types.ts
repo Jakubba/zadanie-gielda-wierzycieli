@@ -5,3 +5,8 @@ export interface Debt {
   Date: string;
   Value: number;
 }
+export enum SortDirection {
+  ASC = "asc",
+  DESC = "desc",
+}
+export const SORT_TYPES = SortDirection;
