@@ -4,19 +4,19 @@ import "./SearchInput.scss";
 interface SearchInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // onSearch: () => void;
+  onSearch: () => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChange,
-  // onSearch,
+  onSearch,
 }) => (
   <form
     className="debt-market__search"
     onSubmit={(e) => {
       e.preventDefault();
-      // onSearch();
+      onSearch();
     }}
   >
     <input

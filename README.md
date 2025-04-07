@@ -161,3 +161,5 @@ Aplikacja korzysta z API z zadania
 Projekt jest dostępny na licencji **MIT**.
 
 ---
+
+uzyłem dodatkowo axiosa i react query

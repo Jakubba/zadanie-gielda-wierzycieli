@@ -1,191 +1,185 @@
-import React from "react";
-import "@testing-library/jest-dom";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import DebtMarket from "./DebtMarket";
-import useDebts from "../../hook/useDebt";
+import React from 'react';
+import '@testing-library/jest-dom';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import DebtMarket from './DebtMarket';
+import { useDebts } from '../../hook/useDebt';
 
-jest.mock("../../hook/useDebt");
+jest.mock('../../hook/useDebt');
 
-describe("DebtMarket Component", () => {
+describe('DebtMarket Component', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  const defaultHookValues = {
+    debts: [],
+    loading: false,
+    error: '',
+    isFallbackToTop10: false,
+    fetchTopDebts: jest.fn(),
+    search: jest.fn(),
+    resetSearch: jest.fn(),
+    setSearchTerm: jest.fn(),
+    searchTerm: '',
+  };
+
+  it('renders debt market component', () => {
+    (useDebts as jest.Mock).mockReturnValue(defaultHookValues);
+    render(<DebtMarket />);
+    expect(screen.getByTestId('debt-market')).toBeInTheDocument();
+  });
+
+  it('displays debts correctly in table', () => {
     (useDebts as jest.Mock).mockReturnValue({
+      ...defaultHookValues,
       debts: [
         {
           Id: 1,
-          Name: "Alicja",
-          NIP: "1234567890",
+          Name: 'Alicja',
+          NIP: '1234567890',
           Value: 1000,
-          Date: "2025-01-01",
+          Date: '2025-01-01',
         },
         {
           Id: 2,
-          Name: "Marcin",
-          NIP: "9876543210",
+          Name: 'Marcin',
+          NIP: '9876543210',
           Value: 2000,
-          Date: "2025-02-01",
+          Date: '2025-02-01',
         },
       ],
-      loading: false,
-      error: "",
-      isFallbackToTop10: false,
-      fetchTopDebts: jest.fn(),
-      searchDebts: jest.fn(),
-      setDebts: jest.fn(),
-      setError: jest.fn(),
     });
-  });
 
-  it("renders debt market component", () => {
     render(<DebtMarket />);
-
-    // Sprawdzamy, czy komponent renderuje poprawnie
-    expect(screen.getByTestId("debt-market")).toBeInTheDocument();
+    expect(screen.getByTestId('debt-table')).toBeInTheDocument();
+    expect(screen.getByText('Alicja')).toBeInTheDocument();
+    expect(screen.getByText('Marcin')).toBeInTheDocument();
   });
 
-  it("displays debts correctly in table", async () => {
-    render(<DebtMarket />);
+  it('triggers search when the search button is clicked', async () => {
+    const mockSearch = jest.fn();
+    const mockSetSearchTerm = jest.fn();
 
-    // Sprawdzamy, czy w tabeli pojawiają się poprawne dane
-    const rows = screen.getAllByRole("row");
-    expect(rows).toHaveLength(3);
-    expect(rows[1]).toHaveTextContent("Alicja");
-    expect(rows[2]).toHaveTextContent("Marcin");
-  });
-
-  it("handles search functionality", async () => {
-    render(<DebtMarket />);
-
-    const searchInput = screen.getByTestId("search-input");
-    const searchButton = screen.getByTestId("search-button");
-
-    // Symulowanie wpisania tekstu i kliknięcia przycisku
-    fireEvent.change(searchInput, { target: { value: "Alicja" } });
-    fireEvent.click(searchButton);
-
-    // Sprawdzamy, czy funkcja wyszukiwania została wywołana
-    await waitFor(() => {
-      expect(useDebts().searchDebts).toHaveBeenCalledWith("Alicja");
-    });
-  });
-
-  it("does not trigger search with less than 3 characters", async () => {
-    render(<DebtMarket />);
-
-    const searchInput = screen.getByTestId("search-input");
-    const searchButton = screen.getByTestId("search-button");
-
-    // Wprowadzamy mniej niż 3 znaki
-    fireEvent.change(searchInput, { target: { value: "Al" } });
-    fireEvent.click(searchButton);
-
-    // Sprawdzamy, że funkcja wyszukiwania nie została wywołana
-    await waitFor(() => {
-      expect(useDebts().searchDebts).not.toHaveBeenCalled();
-    });
-  });
-
-  it("handles loading state", () => {
-    // Zmiana stanu na ładowanie
     (useDebts as jest.Mock).mockReturnValue({
-      ...useDebts(),
+      ...defaultHookValues,
+      search: mockSearch,
+      setSearchTerm: mockSetSearchTerm,
+      searchTerm: 'Ali',
+    });
+
+    render(<DebtMarket />);
+    fireEvent.change(screen.getByTestId('search-input'), {
+      target: { value: 'Ali' },
+    });
+
+    fireEvent.click(screen.getByTestId('search-button'));
+
+    await waitFor(() => {
+      expect(mockSearch).toHaveBeenCalledWith('Ali');
+    });
+  });
+
+  it('does not search if input < 3 chars after clicking the search button', async () => {
+    const mockSearch = jest.fn();
+    const mockResetSearch = jest.fn();
+
+    (useDebts as jest.Mock).mockReturnValue({
+      ...defaultHookValues,
+      search: mockSearch,
+      resetSearch: mockResetSearch,
+      searchTerm: 'Al',
+    });
+
+    render(<DebtMarket />);
+    fireEvent.change(screen.getByTestId('search-input'), {
+      target: { value: 'Al' },
+    });
+
+    fireEvent.click(screen.getByTestId('search-button'));
+
+    await waitFor(() => {
+      expect(mockSearch).not.toHaveBeenCalled();
+      expect(mockResetSearch).toHaveBeenCalled();
+    });
+  });
+
+  it('shows loading spinner', () => {
+    (useDebts as jest.Mock).mockReturnValue({
+      ...defaultHookValues,
       loading: true,
     });
 
     render(<DebtMarket />);
-
-    // Sprawdzamy, czy komponent pokazuje komunikat "Ładowanie..."
-    expect(screen.getByText("Ładowanie...")).toBeInTheDocument();
+    expect(screen.getByText('Ładowanie...')).toBeInTheDocument();
   });
 
-  it("displays error message if there is an error", () => {
-    // Zmiana stanu na błąd
+  it('shows search error when fallback is active', () => {
     (useDebts as jest.Mock).mockReturnValue({
+      ...defaultHookValues,
+      error: 'Nie znaleziono dłużnika o podanym NIP lub nazwie.',
+      isFallbackToTop10: true,
       debts: [],
-      loading: false,
-      error: "Błąd ładowania danych",
-      isFallbackToTop10: false,
-      fetchTopDebts: jest.fn(),
-      searchDebts: jest.fn(),
-      setDebts: jest.fn(),
-      setError: jest.fn(),
+    });
+
+    render(<DebtMarket />);
+    expect(
+      screen.getByText('Nie znaleziono dłużnika o podanym NIP lub nazwie.')
+    ).toBeInTheDocument();
+  });
+
+  it('shows "not found" error when no results', () => {
+    (useDebts as jest.Mock).mockReturnValue({
+      ...defaultHookValues,
+      debts: [],
+      searchTerm: 'Janusz',
+    });
+
+    render(<DebtMarket />);
+    expect(screen.getByText(/Nie znaleziono dłużnika/i)).toBeInTheDocument();
+  });
+
+  it('handles sort correctly on header click', async () => {
+    (useDebts as jest.Mock).mockReturnValue({
+      ...defaultHookValues,
+      debts: [
+        { Id: 2, Name: 'Zofia', NIP: '999', Value: 3000, Date: '2025-03-01' },
+        { Id: 1, Name: 'Adam', NIP: '111', Value: 1000, Date: '2025-01-01' },
+      ],
     });
 
     render(<DebtMarket />);
 
-    // Upewniamy się, że komunikat o błędzie jest wyświetlany
-    expect(screen.getByText("Błąd ładowania danych")).toBeInTheDocument();
-  });
-
-  it("sorts debts correctly by name", () => {
-    render(<DebtMarket />);
-
-    const nameHeader = screen.getByText("Dłużnik");
-
-    // Kliknięcie w nagłówek tabeli, aby posortować dane po nazwie
+    const nameHeader = screen.getByTestId('sort-header-Name');
     fireEvent.click(nameHeader);
 
-    // Sprawdzamy, czy dane zostały posortowane poprawnie
-    const rows = screen.getAllByRole("row");
-    expect(rows[1]).toHaveTextContent("Alicja");
-    expect(rows[2]).toHaveTextContent("Marcin");
-  });
-
-  it("handles empty debt list gracefully", async () => {
-    (useDebts as jest.Mock).mockReturnValue({
-      debts: [],
-      loading: false,
-      error: "",
-      isFallbackToTop10: false,
-      fetchTopDebts: jest.fn(),
-      searchDebts: jest.fn(),
-      setDebts: jest.fn(),
-      setError: jest.fn(),
+    await waitFor(() => {
+      const nameCells = screen
+        .getAllByTestId(/debt-row-/)
+        .map((row) => row.querySelector('td:first-child'));
+      expect(nameCells[0]).toHaveTextContent('Adam');
+      expect(nameCells[1]).toHaveTextContent('Zofia');
     });
 
-    render(<DebtMarket />);
+    fireEvent.click(nameHeader);
 
-    await waitFor(() => expect(screen.queryByText("Ładowanie...")).toBeNull());
-
-    expect(screen.queryByText("Dłużnik")).not.toBeInTheDocument();
+    await waitFor(() => {
+      const nameCells = screen
+        .getAllByTestId(/debt-row-/)
+        .map((row) => row.querySelector('td:first-child'));
+      expect(nameCells[0]).toHaveTextContent('Zofia');
+      expect(nameCells[1]).toHaveTextContent('Adam');
+    });
   });
 
-  it("displays error message if no debts found", async () => {
-    (useDebts as jest.Mock).mockReturnValue({
-      debts: [],
-      loading: false,
-      error: "Nie znaleziono dłużnika o podanym NIP lub nazwie.",
-      isFallbackToTop10: false,
-      fetchTopDebts: jest.fn(),
-      searchDebts: jest.fn(),
-      setDebts: jest.fn(),
-      setError: jest.fn(),
-    });
+  it('does not render table if no debts and not loading', () => {
+    (useDebts as jest.Mock).mockReturnValue(defaultHookValues);
 
     render(<DebtMarket />);
-
-    expect(
-      screen.getByText("Nie znaleziono dłużnika o podanym NIP lub nazwie."),
-    ).toBeInTheDocument();
-  });
-
-  it("handles error response when fetching debts", async () => {
-    (useDebts as jest.Mock).mockReturnValue({
-      debts: [],
-      loading: false,
-      error: "Wystąpił błąd podczas ładowania danych.",
-      isFallbackToTop10: false,
-      fetchTopDebts: jest.fn(),
-      searchDebts: jest.fn(),
-      setDebts: jest.fn(),
-      setError: jest.fn(),
-    });
-
-    render(<DebtMarket />);
-
-    await waitFor(() => expect(screen.queryByText("Ładowanie...")).toBeNull());
-
-    expect(
-      screen.getByText("Wystąpił błąd podczas ładowania danych."),
-    ).toBeInTheDocument();
+    expect(screen.queryByTestId('debt-table')).not.toBeInTheDocument();
   });
 });

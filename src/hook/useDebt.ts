@@ -1,87 +1,42 @@
-import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getTopDebts, searchDebts } from "../api/debtApi";
 import { Debt } from "../types/debt.types";
+import { useState } from "react";
 
-const useDebts = () => {
-  const [debts, setDebts] = useState<Debt[]>([]);
-  const [allDebts, setAllDebts] = useState<Debt[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isFallbackToTop10, setIsFallbackToTop10] = useState(false);
+export const useDebts = () => {
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchTopDebts = async (isFallback = false) => {
-    setLoading(true);
-    if (!isFallback) {
-      setError(null);
-      setIsFallbackToTop10(false);
-    }
-    try {
-      const response = await fetch(
-        "https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetTopDebts",
-      );
-      const data: Debt[] = await response.json();
-      const sorted = data.sort((a, b) => a.Name.localeCompare(b.Name));
-      setDebts(sorted);
-      setAllDebts(sorted);
-      if (isFallback) {
-        setIsFallbackToTop10(true);
-      }
-    } catch (err) {
-      setError("Błąd podczas ładowania danych.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: topDebts = [],
+    isLoading,
+    error,
+  } = useQuery<Debt[], Error>({
+    queryKey: ["topDebts"],
+    queryFn: getTopDebts,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const searchDebts = async (phrase: string) => {
-    if (phrase.length < 3) {
-      setDebts(allDebts);
-      setError(null);
-      setIsFallbackToTop10(false);
-      return;
-    }
+  const {
+    mutate: search,
+    data: searchResults,
+    isPending: isSearching,
+    error: searchError,
+    reset: resetSearch,
+  } = useMutation<Debt[], Error, string>({
+    mutationFn: searchDebts,
+  });
 
-    setLoading(true);
-    setError(null);
-    setIsFallbackToTop10(false);
-
-    try {
-      const response = await fetch(
-        "https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetFilteredDebts",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phrase }),
-        },
-      );
-
-      if (response.ok) {
-        const data: Debt[] = await response.json();
-        if (data.length === 0) {
-          setError("Nie znaleziono dłużnika o podanym NIP lub nazwie.");
-          fetchTopDebts(true);
-        } else {
-          setDebts(data);
-        }
-      } else {
-        setError("Wystąpił problem podczas wyszukiwania.");
-      }
-    } catch (err) {
-      setError("Błąd połączenia.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const currentDebts = searchResults ?? topDebts;
+  const isFallbackToTop10 = !!searchError;
 
   return {
-    debts,
-    loading,
-    error,
+    debts: currentDebts,
+    loading: isLoading || isSearching,
+    error: error?.message || searchError?.message || null,
+    search,
+    resetSearch,
+    setSearchTerm,
+    searchTerm,
     isFallbackToTop10,
-    fetchTopDebts,
-    searchDebts,
-    setDebts,
-    setError,
   };
 };
-
-export default useDebts;
