@@ -29,6 +29,8 @@ Projekt został zbudowany z wykorzystaniem:
 
 - ⚛️ **React.js** (z użyciem Vite)
 - 🏗️ **TypeScript**
+- 🔄 **React Query** – do zarządzania stanem danych oraz cache'owania zapytań
+- 🌐 **Axios** – do obsługi zapytań HTTP
 - 🎨 **SASS** (metodologia BEM)
 - 📜 **JavaScript (ES6 - ES8)**
 - 🧪 **Jest** + **React Testing Library** do testów jednostkowych
@@ -119,7 +121,7 @@ npm run format
 │   │   │   └── SearchInput.scss
 │   │
 │   ├── hook/
-│   │   └── useDebt.ts        # Hook zarządzający stanem długów (np. pobieranie danych błędy, itp.)
+│   │   └── useDebt.ts        # Hook wykorzystujący React Query do pobierania danych oraz zarządzania błędami
 │
 │   ├── types/
 │   │   └── debt.types.ts     # Typy i enumy
@@ -166,5 +168,3 @@ Aplikacja korzysta z API z zadania
 Projekt jest dostępny na licencji **MIT**.
 
 ---
-
-uzyłem dodatkowo axiosa i react query
