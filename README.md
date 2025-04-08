@@ -4,6 +4,7 @@
 ## Opis projektu 📝
 
 **Giełda Wierzytelności** to aplikacja webowa służąca do prezentowania danych dotyczących wierzytelności, pobieranych z API. Umożliwia filtrowanie, sortowanie oraz przeglądanie najważniejszych informacji w czytelnej tabeli.
+👉 Jeśli pole wyszukiwania (input) zostanie kliknięte i pozostawione puste, aplikacja automatycznie przywraca listę TOP 10 wierzytelności
 
 ## Strona live
 
