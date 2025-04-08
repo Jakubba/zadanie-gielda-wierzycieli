@@ -161,8 +161,8 @@ describe('DebtMarket Component', () => {
       const nameCells = screen
         .getAllByTestId(/debt-row-/)
         .map((row) => row.querySelector('td:first-child'));
-      expect(nameCells[0]).toHaveTextContent('Adam');
-      expect(nameCells[1]).toHaveTextContent('Zofia');
+      expect(nameCells[0]).toHaveTextContent('Zofia');
+      expect(nameCells[1]).toHaveTextContent('Adam');
     });
 
     fireEvent.click(nameHeader);
@@ -171,8 +171,8 @@ describe('DebtMarket Component', () => {
       const nameCells = screen
         .getAllByTestId(/debt-row-/)
         .map((row) => row.querySelector('td:first-child'));
-      expect(nameCells[0]).toHaveTextContent('Zofia');
-      expect(nameCells[1]).toHaveTextContent('Adam');
+      expect(nameCells[0]).toHaveTextContent('Adam');
+      expect(nameCells[1]).toHaveTextContent('Zofia');
     });
   });
 

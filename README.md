@@ -91,6 +91,9 @@ npm run format
 │   ├── coin.png              # Ikona aplikacji
 │
 ├── src/
+│   ├── api/
+│   │   ├── debtApi.ts        # Pliki komunikacji z backendem (API)
+│   │
 │   ├── assets/
 │   │   ├── scss/             # Pliki stylów SASS
 │   │   │   ├── reset.scss    # Resetowanie styli
@@ -116,11 +119,13 @@ npm run format
 │   │   │   └── SearchInput.scss
 │   │
 │   ├── hook/
-│   │   └── useDebt.ts        # Hook zarządzający stanem długów (np. pobieranie danych, błędy, itp.)
+│   │   └── useDebt.ts        # Hook zarządzający stanem długów (np. pobieranie danych błędy, itp.)
 │
+│   ├── types/
+│   │   └── debt.types.ts     # Typy i enumy
 │   ├── utils/
 │   │   └── debtSort.ts       # Funkcje pomocnicze do sortowania długów
-│
+│   |
 │   ├── main.tsx              # Punkt wejścia aplikacji
 │   └── vite-env.d.ts         # Deklaracje środowiskowe Vite
 │
